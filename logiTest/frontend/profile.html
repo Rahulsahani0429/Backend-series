@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Profile</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h2>My Profile</h2>
+    <div id="profileData">
+      <p><strong>Name:</strong> <span id="name"></span></p>
+      <p><strong>Email:</strong> <span id="email"></span></p>
+      <p><strong>Role:</strong> <span id="role"></span></p>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "index.html";
+    }
+
+    fetch("http://localhost:5000/api/auth/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Unauthorized");
+        return res.json();
+      })
+      .then((data) => {
+        document.getElementById("name").innerText = data.name;
+        document.getElementById("email").innerText = data.email;
+        document.getElementById("role").innerText = data.role;
+      })
+      .catch((err) => {
+        alert("Access denied");
+        window.location.href = "index.html";
+      });
+  </script>
+</body>
+</html>
